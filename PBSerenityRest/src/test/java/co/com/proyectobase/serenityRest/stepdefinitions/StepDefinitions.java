@@ -1,0 +1,61 @@
+package co.com.proyectobase.serenityRest.stepdefinitions;
+
+import co.com.proyectobase.serenityRest.exceptions.IncorrectExpectedResponse;
+import co.com.proyectobase.serenityRest.tasks.GetReqresIn;
+import co.com.proyectobase.serenityRest.utils.MessageForFailures;
+import co.com.proyectobase.serenityRest.utils.Schema;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.restassured.module.jsv.JsonSchemaValidator;
+import net.serenitybdd.screenplay.actors.OnlineCast;
+import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
+import org.apache.http.HttpStatus;
+
+import static co.com.proyectobase.serenityRest.utils.Constants.*;
+import static net.serenitybdd.screenplay.actors.OnStage.*;
+import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
+
+
+public class StepDefinitions {
+
+
+    @Before
+    public void setUp(){setTheStage(new OnlineCast());}
+
+    @When("consume the reqres.in service")
+    public void consumeTheReqresInService() {
+      theActorInTheSpotlight().attemptsTo(GetReqresIn.MethodGet());
+
+    }
+    @Then("validate the {int} the service")
+    public void validateTheTheService(int statusCode) {
+        theActorInTheSpotlight().should(seeThatResponse("The response code is:" ,
+                response -> response.statusCode(statusCode))
+        );
+
+    }
+    @And("validate {string} the response")
+    public void validateTheResponse(String schemaFile) {
+        String schemaPath = Schema.getSchemaPath(schemaFile);
+        theActorInTheSpotlight().should(
+                seeThatResponse(
+                        is -> is.statusCode(HttpStatus.SC_OK)
+                ).orComplainWith(IncorrectExpectedResponse.class,
+                        MessageForFailures.MESSAGE_WRONG_RESPONSE_CODE_200.getMessage()),
+                seeThatResponse(
+                        is -> is.body(JsonSchemaValidator.matchesJsonSchemaInClasspath(schemaPath))
+                ).orComplainWith(IncorrectExpectedResponse.class, MessageForFailures.MESSAGE_SCHEMA_INVALID.getMessage())
+        );
+
+
+    }
+
+    @Given("I consumer URL base")
+    public void iConsumerURLBase() {
+        theActorCalled("User").whoCan(CallAnApi.at(URL_BASE));
+
+    }
+}

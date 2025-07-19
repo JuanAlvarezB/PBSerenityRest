@@ -1,0 +1,54 @@
+# === OS-specific files ===
+.DS_Store
+Thumbs.db
+
+# === Java build files ===
+*.class
+*.jar
+*.war
+*.ear
+
+# === Gradle ===
+.gradle/
+build/
+.gradle-cache/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# === IntelliJ IDEA ===
+.idea/
+*.iml
+out/
+
+# === Eclipse ===
+.project
+.classpath
+.settings/
+bin/
+
+# === VS Code ===
+.vscode/
+
+# === Serenity ===
+.serenity/
+target/
+**/site/serenity/
+**/serenity-output/
+
+# === Test Reports ===
+**/test-results/
+**/surefire-reports/
+
+# === Code Coverage ===
+**/jacoco.exec
+**/jacoco/
+**/coverage-reports/
+
+# === Logs and temp files ===
+*.log
+*.tmp
+*.swp
+*.swo
+
+# === Environment files ===
+.env

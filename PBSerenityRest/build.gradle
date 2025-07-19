@@ -1,0 +1,73 @@
+group = 'co.com.proyectobase.serenityRest'
+version '1.0'
+version '1.0-SNAPSHOT'
+
+defaultTasks 'clean', 'test', 'aggregate'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'java-library'
+apply plugin: 'net.serenity-bdd.aggregator'
+apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
+apply plugin: "io.freefair.lombok"
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    ext {
+        serenityVersion = "4.0.12"
+        serenityGradleVersion = "3.2.0"
+        serenityCucumberVersion = "4.0.12"
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:$rootProject.ext.serenityGradleVersion"
+        classpath("io.freefair.gradle:lombok-plugin:6.5.0.3")
+    }
+}
+
+dependencies {
+    implementation 'in.yajnesh.util:java-util:1.0.0'
+    implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
+    implementation group: 'jline', name: 'jline', version: '2.13'
+    implementation "net.serenity-bdd:serenity-screenplay-rest:$rootProject.ext.serenityVersion"
+    implementation "net.serenity-bdd:serenity-screenplay:$rootProject.ext.serenityVersion"
+    implementation "net.serenity-bdd:serenity-screenplay-webdriver:$rootProject.ext.serenityVersion"
+    implementation "net.serenity-bdd:serenity-junit:$rootProject.ext.serenityVersion"
+    implementation "net.serenity-bdd:serenity-core:$rootProject.ext.serenityVersion"
+    implementation "net.serenity-bdd:serenity-ensure:$rootProject.ext.serenityVersion"
+    implementation "org.seleniumhq.selenium:selenium-java:4.1.2"
+    implementation 'junit:junit:4.13.2'
+    implementation 'log4j:log4j:1.2.17'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+    testImplementation group: 'io.rest-assured', name: 'json-schema-validator', version: '5.1.1'
+
+    testImplementation "net.serenity-bdd:serenity-cucumber:$rootProject.ext.serenityCucumberVersion"
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.slf4j:slf4j-simple:2.0.6"
+    testImplementation "org.assertj:assertj-core:3.8.0"
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+}
+
+test{
+    systemProperty 'refreshToken', System.getProperty('refreshToken')
+    systemProperty 'accestokenapiconnectqa', System.getProperty('accestokenapiconnectqa')
+    testLogging.showStandardStreams = true
+    finalizedBy(aggregate)
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
