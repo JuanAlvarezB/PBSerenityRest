@@ -1,5 +1,5 @@
 #Author: Juan Camilo Alvarez Barrios
-
+@ConsumirSerenityRest
 Feature: Consumir servicio de reqris.in
 
   Background:
@@ -13,4 +13,13 @@ Feature: Consumir servicio de reqris.in
     Examples:
       | statusCode | schema |
       | 200        | REQRES |
+
+  @TipoPost
+  Scenario Outline: Consumer reqris.in by methor POST
+    When consume method POST by reqres service
+    Then the service response <statuscode>
+    And validate "<schema>" the service by method POST
+    Examples:
+      | statuscode | schema     | email              | password |
+      | 201        | METHODPOST | eve.holt@reqres.in | pistol   |
 
