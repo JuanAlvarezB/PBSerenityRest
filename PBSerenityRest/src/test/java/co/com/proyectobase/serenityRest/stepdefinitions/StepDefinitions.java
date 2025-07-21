@@ -1,6 +1,7 @@
 package co.com.proyectobase.serenityRest.stepdefinitions;
 
 import co.com.proyectobase.serenityRest.exceptions.IncorrectExpectedResponse;
+import co.com.proyectobase.serenityRest.questions.ValidarEmail;
 import co.com.proyectobase.serenityRest.tasks.*;
 import co.com.proyectobase.serenityRest.utils.MessageForFailures;
 import co.com.proyectobase.serenityRest.utils.Schema;
@@ -10,9 +11,12 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.module.jsv.JsonSchemaValidator;
+import net.serenitybdd.screenplay.GivenWhenThen;
+import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 import org.apache.http.HttpStatus;
+import org.junit.Assert;
 
 import static co.com.proyectobase.serenityRest.utils.Constants.*;
 import static net.serenitybdd.screenplay.actors.OnStage.*;
@@ -85,6 +89,16 @@ public class StepDefinitions {
                         is -> is.body(JsonSchemaValidator.matchesJsonSchemaInClasspath(schemaPath))
                 ).orComplainWith(IncorrectExpectedResponse.class, MessageForFailures.MESSAGE_SCHEMA_INVALID.getMessage())
         );
+
+    }
+
+    @And("validate {string} of user")
+    public void validateOfUser(String email) {
+
+        OnStage.theActorInTheSpotlight().should(
+                GivenWhenThen.seeThat(ValidarEmail.validation(email))
+        );
+
 
     }
 }

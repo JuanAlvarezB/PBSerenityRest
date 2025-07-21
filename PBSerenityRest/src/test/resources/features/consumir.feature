@@ -19,7 +19,8 @@ Feature: Consumir servicio de reqris.in
     When consume method POST by reqres service
     Then the service response <statuscode>
     And validate "<schema>" the service by method POST
+    And validate "<email>" of user
     Examples:
-      | statuscode | schema     | email              | password |
-      | 201        | METHODPOST | eve.holt@reqres.in | pistol   |
+      | statuscode | schema     | email              |
+      | 201        | METHODPOST | eve.holt@reqres.in |
 

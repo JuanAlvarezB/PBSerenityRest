@@ -19,6 +19,7 @@ public class GetReqresIn implements Task {
                                     .relaxedHTTPSValidation()
                                     .header("accept","application/json")
                                     .header("Content-Type","application/json")
+                                    .header("x-api-key","reqres-free-v1")
                                     .response().statusCode(200).request()
                     )
             );
