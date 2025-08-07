@@ -2,7 +2,8 @@ package co.com.proyectobase.serenityRest.utils;
 
 public enum Schema {
     REQRES("data/schema/schemaGet.json"),
-    METHODPOST("data/schema/schemaPost.json");
+    METHODPOST("data/schema/schemaPost.json"),
+    METHODPUT("data/schema/schemaPut.json");
 
     private String path;
     Schema(String path){this.path = path;}

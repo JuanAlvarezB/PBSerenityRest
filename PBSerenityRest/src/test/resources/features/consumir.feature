@@ -24,3 +24,12 @@ Feature: Consumir servicio de reqris.in
       | statuscode | schema     | email              |
       | 201        | METHODPOST | eve.holt@reqres.in |
 
+  @TipoPut
+  Scenario Outline: Consumer reqris.in by method PUT
+    When consume method PUT by reqres service
+    Then the service status response <statuscode>
+    And validate "<schema>" the service by method PUT
+    And validate the "<name>" of user
+    Examples:
+      | statuscode | schema    | name     |
+      | 200        | METHODPUT | morpheus |

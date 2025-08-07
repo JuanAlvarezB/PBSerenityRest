@@ -1,49 +1,47 @@
 package co.com.proyectobase.serenityRest.tasks;
 
-
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Task;
-import net.serenitybdd.screenplay.rest.interactions.Post;
+import net.serenitybdd.screenplay.rest.interactions.Put;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static co.com.proyectobase.serenityRest.utils.Constants.*;
 
-public class PostConsumer implements Task {
+
+public class PutConsumer implements Task {
     private String fileJson;
-    public static String EMAIL;
+    public static String NAMERESULT;
+
 
     @Override
     public <T extends Actor> void performAs(T actor) {
         try {
-            fileJson = new String(Files.readAllBytes(Paths.get(PATH_JSON + "/methodPost.json")));
+            fileJson = new String(Files.readAllBytes(Paths.get(PATH_JSON + "/methodPut.json")));
             actor.attemptsTo(
-                    Post.to(PATH_POST).with(
+                    Put.to(PATH_PUT).with(
                             request -> request
                                     .relaxedHTTPSValidation()
                                     .header("Content-type", "application/json")
                                     .header("x-api-key", "reqres-free-v1")
                                     .body(fileJson)
-                                    .response().statusCode(201).request()
+                                    .response().statusCode(200).request()
                     )
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //Ver log de respuesta
-        String responseBody = SerenityRest.lastResponse().body().asString();
-        System.out.println(responseBody);
 
-        String getEmail = SerenityRest.lastResponse().jsonPath().getString("email").trim();
-        if (getEmail.isEmpty()) {
-            throw new RuntimeException("Fallo al extraer el email");
+        String getName = SerenityRest.lastResponse().jsonPath().getString("name").trim();
+        if (getName.isEmpty()) {
+            throw new RuntimeException("Fallo al extraer el name");
         }
-        actor.remember(EMAIL, getEmail);
+        actor.remember(NAMERESULT, getName);
     }
 
-    public static PostConsumer validatePost() {
-        return new PostConsumer();
+    public static PutConsumer validatePut() {
+        return new PutConsumer();
     }
 }

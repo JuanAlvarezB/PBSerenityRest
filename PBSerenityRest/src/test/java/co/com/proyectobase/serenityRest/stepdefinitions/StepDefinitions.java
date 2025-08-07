@@ -1,7 +1,7 @@
 package co.com.proyectobase.serenityRest.stepdefinitions;
 
 import co.com.proyectobase.serenityRest.exceptions.IncorrectExpectedResponse;
-import co.com.proyectobase.serenityRest.questions.ValidarEmail;
+import co.com.proyectobase.serenityRest.questions.*;
 import co.com.proyectobase.serenityRest.tasks.*;
 import co.com.proyectobase.serenityRest.utils.MessageForFailures;
 import co.com.proyectobase.serenityRest.utils.Schema;
@@ -16,7 +16,7 @@ import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 import org.apache.http.HttpStatus;
-import org.junit.Assert;
+
 
 import static co.com.proyectobase.serenityRest.utils.Constants.*;
 import static net.serenitybdd.screenplay.actors.OnStage.*;
@@ -89,16 +89,47 @@ public class StepDefinitions {
                         is -> is.body(JsonSchemaValidator.matchesJsonSchemaInClasspath(schemaPath))
                 ).orComplainWith(IncorrectExpectedResponse.class, MessageForFailures.MESSAGE_SCHEMA_INVALID.getMessage())
         );
-
     }
 
     @And("validate {string} of user")
     public void validateOfUser(String email) {
-
         OnStage.theActorInTheSpotlight().should(
                 GivenWhenThen.seeThat(ValidarEmail.validation(email))
         );
+    }
 
+    @When("consume method PUT by reqres service")
+    public void consumeMethodPUTByReqresService() {
+        theActorInTheSpotlight().attemptsTo(
+                PutConsumer.validatePut()
+        );
+    }
 
+    @Then("the service status response {int}")
+    public void theServiceStatusResponseStatuscode(int statusCode) {
+        theActorInTheSpotlight().should(seeThatResponse("The response code is:",
+                response -> response.statusCode(statusCode))
+        );
+    }
+
+    @And("validate {string} the service by method PUT")
+    public void validateTheServiceByMethodPUT(String schemaFile) {
+        String schemaPath = Schema.getSchemaPath(schemaFile);
+        theActorInTheSpotlight().should(
+                seeThatResponse(
+                        is -> is.statusCode(HttpStatus.SC_OK)
+                ).orComplainWith(IncorrectExpectedResponse.class, MessageForFailures
+                        .MESSAGE_WRONG_RESPONSE_CODE_200.getMessage()),
+                seeThatResponse(
+                        is -> is.body(JsonSchemaValidator.matchesJsonSchemaInClasspath(schemaPath))
+                ).orComplainWith(IncorrectExpectedResponse.class, MessageForFailures.MESSAGE_SCHEMA_INVALID.getMessage())
+        );
+    }
+
+    @And("validate the {string} of user")
+    public void validateTheOfUser(String name) {
+        OnStage.theActorInTheSpotlight().should(
+                GivenWhenThen.seeThat(ValidarName.validationName(name))
+        );
     }
 }
